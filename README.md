@@ -44,6 +44,17 @@ The `StandardScaler` addresses differences in the **scale of feature values**. B
 
 Raising the threshold from `0.50` to `0.70` reduced false alerts by **776**, while the model missed **two additional frauds**. A higher threshold makes the model more selective. Neither threshold is universally best: the choice depends on the cost of missed fraud versus the cost of reviewing a false alert.
 
+## Further model comparison on validation data
+
+To isolate the effect of class weights, the same logistic regression was also fitted **without** `class_weight="balanced"`. Both models were evaluated on the same validation split (25% of the training portion):
+
+| Model at threshold `0.50` | Average precision | Fraud precision | Fraud recall | Detected / 99 | False alerts | Missed frauds |
+|---|---:|---:|---:|---:|---:|---:|
+| Balanced weights | 0.682 | 5.7% | 89.9% | 89 | 1,471 | 10 |
+| No class weights | **0.709** | **82.5%** | 52.5% | 52 | **11** | 47 |
+
+At threshold `0.50`, balanced weights catch 37 more frauds but produce 1,460 more false alerts. The precision–recall curves are close overall, and the unweighted model has a slightly higher average precision on this validation split. Average precision summarizes performance across thresholds; the best decision threshold still depends on the cost of missed fraud and false alerts. These validation numbers are from a different split than the test results above and should not be compared as if they described the same transactions.
+
 ## Run the notebook
 
 1. Create a Python environment and install the notebook dependencies:
